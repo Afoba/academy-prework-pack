@@ -1,0 +1,20 @@
+services:
+  humble:
+    image: ros:humble-ros-base-jammy
+    init: true
+    stdin_open: true
+    tty: true
+    working_dir: /workspace
+    environment:
+      ROS_LOCALHOST_ONLY: "1"
+    volumes:
+      - ./ros2_ws/src:/workspace/ros2_ws/src
+      - ros2_build:/workspace/ros2_ws/build
+      - ros2_install:/workspace/ros2_ws/install
+      - ros2_log:/workspace/ros2_ws/log
+    command: ["sleep", "infinity"]
+
+volumes:
+  ros2_build:
+  ros2_install:
+  ros2_log:

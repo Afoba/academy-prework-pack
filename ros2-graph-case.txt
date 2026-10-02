@@ -1,0 +1,51 @@
+SYNTHETIC SO-101 CELL ROS 2 GRAPH - READING EXERCISE ONLY
+This is not a dump from a physical robot and must not be used to drive one.
+The example cell has a leader arm, follower arm, camera, object and pickup bin.
+
+Node: /leader_state
+  Publishes: /leader/joint_states [sensor_msgs/msg/JointState]
+
+Node: /camera
+  Publishes: /camera/image_raw [sensor_msgs/msg/Image]
+
+Node: /teleop_adapter
+  Subscribes: /leader/joint_states [sensor_msgs/msg/JointState]
+  Publishes: /follower/joint_commands [trajectory_msgs/msg/JointTrajectory]
+
+Node: /follower_driver
+  Subscribes: /follower/joint_commands [trajectory_msgs/msg/JointTrajectory]
+  Publishes: /follower/joint_states [sensor_msgs/msg/JointState]
+
+Node: /recorder
+  Subscribes: /leader/joint_states [sensor_msgs/msg/JointState]
+  Subscribes: /follower/joint_states [sensor_msgs/msg/JointState]
+  Subscribes: /follower/joint_commands [trajectory_msgs/msg/JointTrajectory]
+  Subscribes: /camera/image_raw [sensor_msgs/msg/Image]
+
+Node: /cell_monitor (the C++ prework node)
+  Subscribes: /follower/joint_states [sensor_msgs/msg/JointState]
+  Publishes: /cell/state_fresh [std_msgs/msg/Bool]
+
+Synthetic episode metadata:
+  episode_id: E001
+  session_id: A
+  duration_s: 8.4
+  image_frames: 125
+  joint_state_samples: 420
+  command_samples: 420
+  capture_quality: usable
+  task_outcome: success
+  note: timestamps, topic names and message counts are illustrative
+
+Synthetic arrival-time snapshot (all times use one illustrative steady clock):
+  check_time_ms: 2000
+  last_leader_joint_state_received_ms: 1995
+  last_follower_command_received_ms: 1996
+  last_follower_joint_state_received_ms: 1300
+  last_camera_image_received_ms: 1994
+  exercise_only_stale_threshold_ms: 500
+
+The follower joint state was last received 700 ms before the check. The monitor
+should report state_fresh=false. The 500 ms threshold is for this exercise only;
+it is not a robot safety limit or deployment value. Message header timestamps
+may tell a different story and are not checked by this starter node.

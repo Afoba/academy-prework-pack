@@ -1,0 +1,13 @@
+episode_id,session_id,object,frames,duration_s,capture_quality,task_outcome,review_note
+E001,A,cube,125,8.4,usable,success,clean pickup and placement
+E002,A,cube,0,0.0,unusable,unknown,empty recording
+E003,A,cube,132,9.1,usable,success,clean pickup and placement
+E004,A,cube,118,7.9,usable,success,clean pickup and placement
+E005,A,cube,140,9.5,usable,failure,arm contacted fixture but recording is intact
+E006,A,cube,121,8.1,usable,success,clean pickup and placement
+E007,B,cube,128,8.7,usable,success,clean pickup and placement
+E008,B,cube,119,8.0,unusable,unknown,camera occluded
+E009,B,cube,130,8.9,usable,success,clean pickup and placement
+E010,B,cube,123,8.2,usable,success,clean pickup and placement
+E011,B,cube,127,8.6,unusable,unknown,timestamp gap prevents reliable review
+E012,B,cube,115,7.7,usable,success,clean pickup and placement
