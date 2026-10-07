@@ -16,7 +16,7 @@ inline bool is_stale(
   (void)now;
   (void)last_received;
   (void)timeout;
-  return true;
+  return !last_received.has_value() || (now - last_received.value()) > timeout;
 }
 
 }  // namespace academy_cell_monitor

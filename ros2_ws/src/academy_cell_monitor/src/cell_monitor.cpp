@@ -30,6 +30,7 @@ class CellMonitor : public rclcpp::Node {
     (void)message;
     // Prework TODO: under state_mutex_, record this message's local arrival
     // time in last_received_. Do not use the illustrative header timestamp.
+    last_received_ = std::chrono::steady_clock::now();
   }
 
   void on_timer() {
