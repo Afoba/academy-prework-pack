@@ -29,8 +29,8 @@ class TestFlagRecording(unittest.TestCase):
             'session_id': 'A',
             'capture_quality': 'unusable',
             'task_outcome': 'unknown',
-            'duration_s': '0.0',
-            'frames': '0'
+            'duration_s': '1.0',
+            'frames': '10'
         }
         self.assertTrue(flag_recording(row))
 

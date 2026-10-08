@@ -1,5 +1,23 @@
 # My solution of tasks 3 and 4 (including unit_tests.py)
 import csv
+import argparse
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("file_name", help="Path to the CSV file containing episode data")
+    args = parser.parse_args()
+
+    try:
+        file = open(args.file_name, 'r')
+        file.close()
+    except FileNotFoundError:
+        raise SystemExit(f"Error: file '{args.file_name}' was not found.")
+
+    if not args.file_name.endswith('.csv'):
+        raise SystemExit(f"Error: file '{args.file_name}' is not a CSV file.")
+
+    return args
+
 
 usable_values = ['usable', 'unusable']
 outcome_values = ['success', 'failure', 'unknown']
@@ -15,41 +33,45 @@ def flag_recording(row): # explicit conditions for readability
 
     return usable_check and outcome_check and time_check and session_exists or row['capture_quality'] == 'unusable' 
 
-record = {}
-flagged_entries = []
+def main():
+    args = parse_args()
+    record = {}
+    flagged_entries = []
 
-try:
-    file = open('sample-episodes.csv', 'r')
-except FileNotFoundError:
-    raise SystemExit("Error: file 'sample-episodes.csv' was not found.")
+    with open(args.file_name, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if row['session_id'] not in record.keys():
+                record[row['session_id']] = {
+                    'total': 0,
+                    'usable': 0,
+                    'success': 0
+                }
 
-with open('sample-episodes.csv', 'r') as file:
-    reader = csv.DictReader(file)
-    for row in reader:
-        if not flag_recording(row):
-            flagged_entries.append(row)
-            continue
-        if row['session_id'] not in record.keys():
-            record[row['session_id']] = {
-                'total': 0,
-                'usable': 0,
-                'success': 0
-            }
-        record[row['session_id']]['total'] += 1
-        if row['capture_quality'] == 'usable':
-            record[row['session_id']]['usable'] += 1
-            if row['task_outcome'] == 'success':
-                record[row['session_id']]['success'] += 1
+            record[row['session_id']]['total'] += 1
+            if not flag_recording(row):
+                flagged_entries.append(row)
+                continue
+            
+            if row['capture_quality'] == 'usable':
+                record[row['session_id']]['usable'] += 1
+                if row['task_outcome'] == 'success':
+                    record[row['session_id']]['success'] += 1
 
-total_sessions = sum([record[session]['total'] for session in record])
-total_usable = sum([record[session]['usable'] for session in record])
-total_success = sum([record[session]['success'] for session in record])
+    total_sessions = sum([record[session]['total'] for session in record])
+    total_usable = sum([record[session]['usable'] for session in record])
+    total_success = sum([record[session]['success'] for session in record])
 
-print(f'Total sessions: {total_sessions}')
-print(f'Total usable sessions: {total_usable}')
-print(f'Total unusable sessions: {total_sessions - total_usable}')
-for key, value in record.items():
-    print(f'Session {key} usable sessions: {value["usable"]}')
-print(f'Total successful sessions: {total_success}')
-print(f'Total unsuccessful sessions: {total_usable - total_success}')
-print(f'Filtered {len(flagged_entries)} episode(s): {", ".join(row["episode_id"] for row in flagged_entries)}')
+    print(f'Total sessions: {total_sessions}')
+    print(f'Total usable sessions: {total_usable}')
+    print(f'Total unusable sessions: {total_sessions - total_usable}')
+    for key, value in record.items():
+        if len(key) > 0: # to filter displays of null session_id entries
+            print(f'Session {key} total sessions: {value["total"]}')
+    print(f'Total successful sessions: {total_success}')
+    print(f'Total unsuccessful sessions: {total_usable - total_success}')
+    print(f'Flagged {len(flagged_entries)} episode(s): {", ".join(row["episode_id"] for row in flagged_entries)}')
+
+
+if __name__ == "__main__":
+    main()
