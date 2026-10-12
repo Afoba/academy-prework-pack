@@ -39,3 +39,12 @@ The joint state of each joint can be understood as the current position, velocit
 
 ![nodes](figures/nodes.png)
 
+In this snapshot, the current `check_time_ms` is $2000ms$. The latest `last_follower_joint_state_received_ms` received was recorded at $1300ms$, thus, it has an age of $700ms$. This exceeds the stale threshold of $500ms$, ensuring `/cell/state_fresh` is false. Despite receiving commands, the robot does not necessarily move, for example, if its commanded to make movement beyond its actuator limits.
+
+----
+
+## Tasks 8-10
+
+The implementation of `is_stale()` and `on_state()` were implemented in their respective files. The implementation works as expected, with the correct `/cell/state_fresh` value changes.
+
+-----
